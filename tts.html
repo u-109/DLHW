@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speak It Your Way!</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f3f3;
+      color: #1f1f1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+      background: #ffffff;
+      border: 1px solid #d8d8d8;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: #6b6b6b;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333333;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      border: 1px solid #cfcfcf;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 18px;
+      line-height: 1.6;
+      outline: none;
+      color: #1f1f1f;
+      background: #fafafa;
+      transition: 0.2s;
+    }
+
+    textarea:focus {
+      border-color: #4d4d4d;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .counter {
+      margin-top: 8px;
+      text-align: right;
+      font-size: 12px;
+      color: #8a8a8a;
+    }
+
+    .section {
+      margin-top: 24px;
+    }
+
+    .accent-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .accent-btn {
+      border: 1px solid #cfcfcf;
+      background: #f8f8f8;
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.2s;
+    }
+
+    .accent-btn:hover {
+      background: #eeeeee;
+    }
+
+    .accent-btn.active {
+      background: #1f1f1f;
+      color: #ffffff;
+      border-color: #1f1f1f;
+    }
+
+    .accent-name {
+      display: block;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .accent-code {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .control-box {
+      background: #f7f7f7;
+      border: 1px solid #dddddd;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .control-box label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .value {
+      color: #707070;
+      font-weight: 400;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #222222;
+    }
+
+    .main-actions {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .play-btn,
+    .secondary-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .play-btn {
+      background: #1f1f1f;
+      color: #ffffff;
+    }
+
+    .play-btn:hover {
+      background: #000000;
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      background: #eeeeee;
+      color: #222222;
+      border: 1px solid #d5d5d5;
+    }
+
+    .secondary-btn:hover {
+      background: #e4e4e4;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      background: #f4f4f4;
+      border: 1px solid #dddddd;
+      font-size: 14px;
+      color: #555555;
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+    }
+
+    .voice-info {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e1e1e1;
+      font-size: 12px;
+      color: #7a7a7a;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 650px) {
+      .app {
+        padding: 22px 16px;
+      }
+
+      .accent-buttons,
+      .controls,
+      .main-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 27px;
+      }
+
+      textarea {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <div class="header">
+      <h1 class="title">Speak It Your Way!</h1>
+      <p class="subtitle">
+        Type a sentence, choose an accent, and hear how English sounds.
+      </p>
+    </div>
+
+    <label class="label" for="textInput">English sentence</label>
+
+    <textarea
+      id="textInput"
+      maxlength="1000"
+      placeholder="Type an English sentence here..."
+    >The weather is beautiful today. Would you like to go for a walk?</textarea>
+
+    <div class="counter">
+      <span id="charCount">0</span> / 1000
+    </div>
+
+    <div class="section">
+      <span class="label">Choose an accent</span>
+
+      <div class="accent-buttons">
+
+        <button
+          id="usButton"
+          class="accent-btn active"
+          onclick="selectAccent('en-US')"
+        >
+          <span class="accent-name">American English</span>
+          <span class="accent-code">en-US</span>
+        </button>
+
+        <button
+          id="ukButton"
+          class="accent-btn"
+          onclick="selectAccent('en-GB')"
+        >
+          <span class="accent-name">British English</span>
+          <span class="accent-code">en-GB</span>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="controls">
+
+      <div class="control-box">
+        <label>
+          <span>Speed</span>
+          <span class="value" id="rateValue">1.0×</span>
+        </label>
+
+        <input
+          id="rateControl"
+          type="range"
+          min="0.5"
+          max="1.5"
+          step="0.1"
+          value="1"
+        />
+      </div>
+
+      <div class="control-box">
+        <label>
+          <span>Pitch</span>
+          <span class="value" id="pitchValue">1.0</span>
+        </label>
+
+        <input
+          id="pitchControl"
+          type="range"
+          min="0.5"
+          max="1.5"
+          step="0.1"
+          value="1"
+        />
+      </div>
+
+    </div>
+
+    <div class="main-actions">
+
+      <button class="play-btn" onclick="playSpeech()">
+        ▶ Play
+      </button>
+
+      <button class="secondary-btn" onclick="pauseResumeSpeech()">
+        ⏯ Pause / Resume
+      </button>
+
+      <button class="secondary-btn" onclick="stopSpeech()">
+        ■ Stop
+      </button>
+
+    </div>
+
+    <div class="status" id="status">
+      Ready. Choose an accent and press Play.
+    </div>
+
+    <div class="voice-info" id="voiceInfo">
+      Voice information will appear here.
+    </div>
+
+  </main>
+
+
+  <script>
+
+    const synth = window.speechSynthesis;
+
+    const textInput = document.getElementById("textInput");
+    const charCount = document.getElementById("charCount");
+    const rateControl = document.getElementById("rateControl");
+    const pitchControl = document.getElementById("pitchControl");
+    const rateValue = document.getElementById("rateValue");
+    const pitchValue = document.getElementById("pitchValue");
+    const status = document.getElementById("status");
+    const voiceInfo = document.getElementById("voiceInfo");
+    const usButton = document.getElementById("usButton");
+    const ukButton = document.getElementById("ukButton");
+
+    let selectedAccent = "en-US";
+    let voices = [];
+    let currentUtterance = null;
+
+
+    function updateCharacterCount() {
+      charCount.textContent = textInput.value.length;
+    }
+
+
+    function loadVoices() {
+      voices = synth.getVoices();
+      updateVoiceInformation();
+    }
+
+
+    function selectAccent(accent) {
+
+      selectedAccent = accent;
+
+      if (accent === "en-US") {
+        usButton.classList.add("active");
+        ukButton.classList.remove("active");
+      } else {
+        ukButton.classList.add("active");
+        usButton.classList.remove("active");
+      }
+
+      updateVoiceInformation();
+    }
+
+
+    function findBestVoice(languageCode) {
+
+      if (!voices.length) {
+        voices = synth.getVoices();
+      }
+
+      const exactMatches = voices.filter(
+        voice =>
+          voice.lang.toLowerCase() === languageCode.toLowerCase()
+      );
+
+      if (exactMatches.length > 0) {
+
+        const preferredVoice = exactMatches.find(
+          voice =>
+            /google|samantha|daniel|alex|serena|ava|tom|victoria/i.test(voice.name)
+        );
+
+        return preferredVoice || exactMatches[0];
+      }
+
+      const englishVariant = voices.find(
+        voice =>
+          voice.lang
+            .toLowerCase()
+            .startsWith(languageCode.substring(0, 2).toLowerCase())
+      );
+
+      return englishVariant || null;
+    }
+
+
+    function playSpeech() {
+
+      const text = textInput.value.trim();
+
+      if (!text) {
+        status.textContent = "Please enter an English sentence first.";
+        return;
+      }
+
+      synth.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      currentUtterance = utterance;
+
+      const voice = findBestVoice(selectedAccent);
+
+      utterance.lang = selectedAccent;
+
+      if (voice) {
+        utterance.voice = voice;
+      }
+
+      utterance.rate = parseFloat(rateControl.value);
+      utterance.pitch = parseFloat(pitchControl.value);
+      utterance.volume = 1;
+
+      utterance.onstart = function () {
+
+        const accentName =
+          selectedAccent === "en-US"
+            ? "American English"
+            : "British English";
+
+        status.textContent =
+          "Playing " + accentName + "...";
+      };
+
+
+      utterance.onend = function () {
+        status.textContent = "Finished.";
+      };
+
+
+      utterance.onerror = function (event) {
+
+        if (event.error !== "interrupted") {
+          status.textContent =
+            "Speech playback could not be completed.";
+        }
+      };
+
+      synth.speak(utterance);
+    }
+
+
+    function pauseResumeSpeech() {
+
+      if (!synth.speaking) {
+        status.textContent =
+          "Nothing is currently playing.";
+        return;
+      }
+
+      if (synth.paused) {
+
+        synth.resume();
+        status.textContent =
+          "Playback resumed.";
+
+      } else {
+
+        synth.pause();
+        status.textContent =
+          "Playback paused.";
+      }
+    }
+
+
+    function stopSpeech() {
+      synth.cancel();
+      status.textContent =
+        "Playback stopped.";
+    }
+
+
+    function updateVoiceInformation() {
+
+      const voice = findBestVoice(selectedAccent);
+
+      const accentName =
+        selectedAccent === "en-US"
+          ? "American English"
+          : "British English";
+
+      if (voice) {
+
+        voiceInfo.innerHTML =
+          "<strong>Selected accent:</strong> " +
+          accentName +
+          "<br>" +
+          "<strong>Browser voice:</strong> " +
+          voice.name +
+          " (" +
+          voice.lang +
+          ")";
+
+      } else {
+
+        voiceInfo.innerHTML =
+          "<strong>Selected accent:</strong> " +
+          accentName +
+          "<br>" +
+          "No exact " +
+          selectedAccent +
+          " voice was found on this device. " +
+          "The browser may use its closest available English voice.";
+      }
+    }
+
+
+    textInput.addEventListener(
+      "input",
+      updateCharacterCount
+    );
+
+
+    rateControl.addEventListener(
+      "input",
+      function () {
+
+        rateValue.textContent =
+          parseFloat(rateControl.value).toFixed(1) + "×";
+      }
+    );
+
+
+    pitchControl.addEventListener(
+      "input",
+      function () {
+
+        pitchValue.textContent =
+          parseFloat(pitchControl.value).toFixed(1);
+      }
+    );
+
+
+    if ("speechSynthesis" in window) {
+
+      loadVoices();
+
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+      }
+
+    } else {
+
+      status.textContent =
+        "This browser does not support Speech Synthesis.";
+    }
+
+    updateCharacterCount();
+
+  </script>
+
+</body>
+</html>
